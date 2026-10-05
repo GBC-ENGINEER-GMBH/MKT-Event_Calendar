@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Networking Events 2026 · gbc engineers</title>
+<style>
+  :root{
+    --navy:#0a2540; --navy2:#102f54; --blue:#1565d8; --blue-soft:#e8f1fd;
+    --teal:#0f9d8c; --teal-soft:#e2f6f3; --amber:#e8920c; --amber-soft:#fdf1dd;
+    --ink:#0f1b2d; --muted:#5b6b7f; --line:#e4e9f0; --bg:#f5f7fb; --white:#fff;
+    --shadow:0 1px 3px rgba(16,47,84,.06),0 8px 24px rgba(16,47,84,.06);
+    --shadow-hover:0 6px 16px rgba(21,101,216,.14),0 18px 40px rgba(16,47,84,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{text-decoration:none;color:inherit}
+
+  .hero{position:relative;background:linear-gradient(135deg,#0a2540 0%,#103a6b 55%,#1565d8 130%);color:#fff;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(15,157,140,.35),transparent 70%)}
+  .hero::before{content:"";position:absolute;left:-80px;bottom:-160px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(21,101,216,.4),transparent 70%)}
+  .hero-inner{max-width:1180px;margin:0 auto;padding:30px 28px 120px;position:relative;z-index:2}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px;font-size:15px}
+  .brand .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(15,157,140,.25)}
+  .brand small{font-weight:400;opacity:.8;letter-spacing:.3px}
+  .eyebrow{margin-top:54px;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7fb2ff}
+  h1{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-1px;margin-top:10px;line-height:1.05}
+  h1 span{color:#5fd0c2}
+  .sub{margin-top:16px;max-width:640px;font-size:17px;color:#cdddf2}
+  .sub b{color:#fff;font-weight:600}
+
+  .stats{max-width:1180px;margin:-78px auto 0;padding:0 28px;position:relative;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .stat{background:#fff;border-radius:16px;padding:22px 20px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .stat .n{font-size:34px;font-weight:800;letter-spacing:-1px;color:var(--navy)}
+  .stat .n.teal{color:var(--teal)} .stat .n.amber{color:var(--amber)} .stat .n.blue{color:var(--blue)}
+  .stat .l{font-size:13px;color:var(--muted);margin-top:3px;font-weight:500}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .controls{margin-top:34px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+  .searchrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .search{flex:1;min-width:230px;position:relative}
+  .search input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 16px 13px 44px;font-size:15px;outline:none;transition:.2s;background:var(--bg)}
+  .search input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+  .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted)}
+  select{border:1.5px solid var(--line);border-radius:12px;padding:13px 38px 13px 14px;font-size:14px;color:var(--ink);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%235b6b7f' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;appearance:none;cursor:pointer;font-weight:500;outline:none;transition:.2s}
+  select:focus{border-color:var(--blue);background-color:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:30px;padding:8px 16px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{border-color:var(--blue);color:var(--blue)}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip.active.bc{background:var(--blue);border-color:var(--blue)}
+  .chip.active.mc{background:var(--teal);border-color:var(--teal)}
+  .chip .c-dot{width:9px;height:9px;border-radius:50%}
+  .chip .c-dot.bc{background:var(--blue)} .chip .c-dot.mc{background:var(--teal)}
+
+  .resbar{display:flex;justify-content:space-between;align-items:center;margin:26px 0 16px;flex-wrap:wrap;gap:10px}
+  .resbar .count{font-size:15px;color:var(--muted)} .resbar .count b{color:var(--ink);font-weight:700}
+  .sorttoggle{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:9px 15px;font-size:13.5px;font-weight:700;color:var(--navy);cursor:pointer;transition:.18s}
+  .sorttoggle:hover{border-color:var(--blue);color:var(--blue)}
+  .sorttoggle svg{color:var(--blue)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px;padding-bottom:60px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:.22s;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue)}
+  .card.mc::before{background:var(--teal)}
+  .card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:#d3e0f0}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .datebox{text-align:center;background:var(--blue-soft);border-radius:12px;padding:9px 14px;min-width:64px;flex-shrink:0}
+  .card.mc .datebox{background:var(--teal-soft)}
+  .datebox .d{font-size:24px;font-weight:800;line-height:1;color:var(--navy)}
+  .datebox .m{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-top:3px}
+  .card.mc .datebox .m{color:var(--teal)}
+  .datebox.tbd .d{font-size:14px;padding:6px 0;font-weight:700;color:var(--muted)}
+  .etype{font-size:10.5px;font-weight:700;letter-spacing:.2px;padding:6px 12px;border-radius:30px;white-space:nowrap;line-height:1}
+  .org{font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+  .card.mc .org{color:var(--teal)}
+  .title{font-size:18px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:14px}
+  .meta{display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--muted);margin-bottom:14px}
+  .meta div{display:flex;align-items:center;gap:8px}
+  .meta svg{flex-shrink:0;color:#9aa8ba}
+
+  .price{background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:16px}
+  .price-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+  .price-rows{display:flex;gap:8px;flex-wrap:wrap}
+  .pr{flex:1;min-width:96px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+  .pr .pl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  .pr .pv{font-size:15px;font-weight:800;color:var(--navy);margin-top:2px}
+  .pr.mem .pv{color:var(--teal)} .pr.early .pv{color:var(--amber)}
+  .price-note{font-size:12px;color:var(--muted);margin-top:9px;display:flex;align-items:flex-start;gap:6px}
+  .price-note svg{flex-shrink:0;margin-top:2px;color:#9aa8ba}
+  .price.single .pn{font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .price.single .pn svg{color:var(--blue);flex-shrink:0}
+
+  .card-foot{margin-top:auto}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:11px;font-size:14px;font-weight:700;transition:.18s;cursor:pointer}
+  .btn.go{background:var(--navy);color:#fff}
+  .btn.go:hover{background:var(--blue)}
+  .btn.dis{background:var(--bg);color:#9aa8ba;cursor:default;border:1px dashed var(--line)}
+
+  .empty{text-align:center;padding:70px 20px;color:var(--muted)}
+  .empty svg{color:#c3cfde;margin-bottom:14px}
+  .empty h3{font-size:19px;color:var(--ink);margin-bottom:6px}
+
+  footer{background:var(--navy);color:#9fb6d4;text-align:center;padding:30px 20px;font-size:13px}
+  footer b{color:#fff}
+
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.hero-inner{padding-bottom:110px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand"><span class="dot"></span>gbc engineers <small>· Marketing</small></div>
+    <div class="eyebrow">Ho Chi Minh City · 2026</div>
+    <h1>Networking <span>Events</span> Calendar</h1>
+    <p class="sub">Curated business chamber and market-company events across Vietnam for <b>gbc engineers</b>. Search, filter by event type, and explore pricing — all in one place.</p>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stat"><div class="n blue" id="s-total">0</div><div class="l">Total events</div></div>
+  <div class="stat"><div class="n" id="s-bc">0</div><div class="l">Business chambers</div></div>
+  <div class="stat"><div class="n teal" id="s-mc">0</div><div class="l">Market companies</div></div>
+  <div class="stat"><div class="n amber" id="s-org">0</div><div class="l">Organizations</div></div>
+</section>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="searchrow">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" type="text" placeholder="Search events, organizations, topics…">
+      </div>
+      <select id="etype"><option value="">All event types</option></select>
+      <select id="org"><option value="">All organizations</option></select>
+      <select id="month"><option value="">All months</option></select>
+      <select id="sort"><option value="date">Sort: Date (earliest)</option><option value="date-desc">Sort: Date (latest)</option><option value="org">Sort: Organization (A–Z)</option></select>
+    </div>
+    <div class="chips" id="typechips">
+      <button class="chip active" data-type="">All types</button>
+      <button class="chip bc" data-type="Business Chamber"><span class="c-dot bc"></span>Business Chamber</button>
+      <button class="chip mc" data-type="Market Company"><span class="c-dot mc"></span>Market Company</button>
+    </div>
+  </div>
+
+  <div class="resbar">
+    <div class="count" id="count"></div>
+    <button class="sorttoggle" id="daytoggle" aria-label="Toggle sort order by day">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+      <span id="daytoggle-label">Day: earliest first</span>
+    </button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>Prepared by the <b>gbc engineers Marketing Team</b> · Event Calendar 2026 · Ho Chi Minh City · Pricing shown is from official event pages and may change — confirm on registration.</footer>
+
+<script>
+const EVENTS = [{"type": "Business Chamber", "date": "2026-10-22", "date_text": null, "org": "CCIFV", "event": "From Fast to Last", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://www.calameo.com/read/00460114985e617d64ef8", "price": {"member": null, "nonmember": null, "early": null, "note": "See organizer for pricing"}}, {"type": "Business Chamber", "date": "2026-10-15", "date_text": null, "org": "CCIFV", "event": "France-Vietnam Forward 2026", "location": "HCMC", "event_type": "Conferences & Summits", "url": "https://www.ccifv.org/en/events/upcoming/event-details/event/hcmc-france-vietnam-forward-2026.html", "price": {"member": null, "nonmember": null, "early": null, "note": "Free event"}}, {"type": "Business Chamber", "date": "2026-11-17", "date_text": null, "org": "CCIFV", "event": "Vietnam Economic Mission – APF Delegation", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://www.ccifv.org/en/events/upcoming/event-details/event/hcmc-vietnam-economic-mission-apf-delegation.html", "price": {"member": null, "nonmember": null, "early": null, "note": "€450 per participant · extra fees for int'l bank transfer"}}, {"type": "Business Chamber", "date": "2026-10-23", "date_text": null, "org": "NordCham", "event": "Nordic Business Awards", "location": "HCMC", "event_type": "Conferences & Summits", "url": "https://nordchamvietnam.com/events/nordic-business-awards", "price": {"member": null, "nonmember": null, "early": null, "note": "See NordCham for pricing"}}, {"type": "Business Chamber", "date": "2026-10-29", "date_text": null, "org": "BritCham", "event": "UK – Vietnam Business Forum 2026", "location": "HCMC", "event_type": "Conferences & Summits", "url": "https://britchamvn.com/events/uk-vietnam-business-forum-2026/", "price": {"member": null, "nonmember": null, "early": null, "note": "Day Package / Gala Dinner / Full Package — see event page for pricing"}}, {"type": "Business Chamber", "date": "2026-11-26", "date_text": null, "org": "BritCham", "event": "BritCham Networking: Connect & Cocktails", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://britchamvn.com/events/britcham-networking-connect-cocktails-november-edition/", "price": {"member": "Free", "nonmember": "₫250,000", "early": "₫200,000", "note": "Early bird for non-members; ₫250,000 walk-in"}}, {"type": "Business Chamber", "date": "2026-12-11", "date_text": null, "org": "BritCham", "event": "Christmas Long Lunch HCMC 2026", "location": "HCMC", "event_type": "Business Meals & Breakfasts", "url": "https://britchamvn.com/events/christmas-long-lunch-hcmc-2026/", "price": {"member": "₫2,200,000", "nonmember": "₫2,600,000", "early": null, "note": "Seats limited · no walk-ins"}}, {"type": "Business Chamber", "date": "2026-10-01", "date_text": null, "org": "AusCham", "event": "The Future of Customer Experience: AI-automation Smarter Decision-making", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://auschamvn.glueup.com/event/the-future-of-customer-experience-ai-automation-smarter-decision-making-190343/", "price": {"member": "Free", "nonmember": "₫500,000", "early": null, "note": "Members: approval required · co-host members ₫300,000 · includes Sundowners after"}}, {"type": "Business Chamber", "date": "2026-10-01", "date_text": null, "org": "AusCham", "event": "October Sundowners In HCMC", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://auschamvn.glueup.com/event/october-sundowners-in-hcmc-187944/", "price": {"member": "Free", "nonmember": "₫350,000", "early": null, "note": "Member limit: 3 tickets/company"}}, {"type": "Business Chamber", "date": "2026-10-28", "date_text": null, "org": "AmCham", "event": "Connect & Cocktails", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://www.amchamvietnam.com/events/connect-cocktails-oct-2026/", "price": {"member": "Free", "nonmember": "₫200,000", "early": null, "note": null}}, {"type": "Business Chamber", "date": "2026-10-07", "date_text": null, "org": "BeLuxCham Vietnam", "event": "Scaling Operations & Data Reliability: Overcoming Critical ERP Challenges", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://www.beluxcham.com/scaling-operations-data-reliability-overcoming-critical-erp-challenges", "price": {"member": "₫150,000", "nonmember": "₫250,000", "early": null, "note": "Co-host members: ₫200,000"}}, {"type": "Business Chamber", "date": "2026-10-08", "date_text": null, "org": "BeLuxCham Vietnam", "event": "Vietnam Meets Europe - 8th October", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://www.beluxcham.com/vietnam-meets-europe-8th-october", "price": {"member": "₫225,000", "nonmember": "₫425,000", "early": null, "note": "Co-host: ₫325,000"}}, {"type": "Business Chamber", "date": "2026-12-09", "date_text": null, "org": "BeLuxCham Vietnam", "event": "EuroCham Business Awards 2026", "location": "TBA", "event_type": "Conferences & Summits", "url": "https://www.beluxcham.com/eurocham-business-awards-2026-beluxcham-member-nominations", "price": {"member": null, "nonmember": null, "early": null, "note": "Nomination-based awards ceremony (nominations closed Sep 28); venue and pricing TBA"}}, {"type": "Business Chamber", "date": null, "date_text": "October", "org": "CanCham", "event": "Thanksgiving Dinner", "location": "HCMC", "event_type": "Business Meals & Breakfasts", "url": null, "price": {"member": null, "nonmember": null, "early": null, "note": "See CanCham for pricing"}}, {"type": "Business Chamber", "date": null, "date_text": "November", "org": "CanCham", "event": "Can-Connect Webinar", "location": "HCMC", "event_type": "Webinars & Online Events", "url": null, "price": {"member": null, "nonmember": null, "early": null, "note": "See CanCham for pricing"}}, {"type": "Business Chamber", "date": null, "date_text": "December", "org": "CanCham", "event": "Christmas Gathering", "location": "HCMC", "event_type": "Networking & Cocktails", "url": null, "price": {"member": null, "nonmember": null, "early": null, "note": "See CanCham for pricing"}}, {"type": "Business Chamber", "date": "2026-10-13", "date_text": null, "org": "GBA", "event": "German Business & Investment Forum 2026", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://gba-vietnam.org/eventer/german-business-investment-forum-2026/edate/2026-10-13/", "price": {"member": "₫1,200,000", "nonmember": "₫1,700,000", "early": null, "note": "+Evening Reception: ₫1,450,000 (members) / ₫2,200,000 (non-members)"}}, {"type": "Business Chamber", "date": "2026-10-21", "date_text": null, "org": "GBA", "event": "DeutschenTreff in HCMC", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://gba-vietnam.org/eventer/deutschentreff-in-hcmc-october-2026/edate/2026-10-21/", "price": {"member": null, "nonmember": null, "early": null, "note": "Details/pricing TBA"}}, {"type": "Business Chamber", "date": "2026-11-02", "date_text": null, "org": "GBA", "event": "GBA Monthly Business Meeting", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://gba-vietnam.org/eventer/gba-monthly-business-meeting-november-2026/edate/2026-11-02/", "price": {"member": null, "nonmember": null, "early": null, "note": "Details/pricing TBA"}}, {"type": "Business Chamber", "date": "2026-11-20", "date_text": null, "org": "GBA", "event": "GBA Gala Dinner & Business Awards 2026", "location": "HCMC", "event_type": "Business Meals & Breakfasts", "url": "https://gba-vietnam.org/eventer/gba-gala-dinner-business-awards-2026/edate/2026-11-20/", "price": {"member": "₫3,000,000", "nonmember": "₫4,000,000", "early": "₫2,500,000 (members) / ₫3,500,000 (non-members)", "note": "Early bird before Oct 20 · Black Tie"}}, {"type": "Business Chamber", "date": "2026-12-07", "date_text": null, "org": "GBA", "event": "GBA Monthly Business Meeting", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://gba-vietnam.org/eventer/gba-monthly-business-meeting-december-2026/edate/2026-12-07/", "price": {"member": null, "nonmember": null, "early": null, "note": "Details/pricing TBA"}}, {"type": "Business Chamber", "date": "2026-12-16", "date_text": null, "org": "GBA", "event": "DeutschenTreff in HCMC", "location": "HCMC", "event_type": "Networking & Cocktails", "url": "https://gba-vietnam.org/eventer/deutschentreff-in-hcmc-december-2026/edate/2026-12-16/", "price": {"member": null, "nonmember": null, "early": null, "note": "Details/pricing TBA"}}, {"type": "Market Company", "date": "2026-10-08", "date_text": null, "org": "TraiCon Events", "event": "World Datacentre Summit – Vietnam", "location": "HCMC", "event_type": "Data Center & Cloud Infrastructure", "url": "https://datacenterinnovationseries.com/vietnam/", "price": {"member": null, "nonmember": null, "early": null, "note": "Free for qualified trade visitors"}}, {"type": "Market Company", "date": null, "date_text": null, "org": "Various Organizers", "event": "Data Center and Power Southeast Asia Summit 2026", "location": "Thailand", "event_type": "Data Center & Cloud Infrastructure", "url": "https://www.aidcapac.com/", "price": {"member": null, "nonmember": null, "early": null, "note": "See event page"}}, {"type": "Market Company", "date": "2026-11-26", "date_text": null, "org": "Savills Vietnam", "event": "Meet The Expert 2026", "location": "HCMC", "event_type": "Industry Seminars & Expert Talks", "url": "https://wehub.asia/calendar/", "price": {"member": null, "nonmember": null, "early": null, "note": "By invitation · see event page"}}];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHFULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const ETYPE_COLORS={
+  'Networking & Cocktails':['#fbeaf0','#993556'],
+  'Industry Seminars & Expert Talks':['#e6f1fb','#0c447c'],
+  'Conferences & Summits':['#eeedfe','#3c3489'],
+  'Business Meals & Breakfasts':['#faeeda','#633806'],
+  'Webinars & Online Events':['#e1f5ee','#085041'],
+  'Data Center & Cloud Infrastructure':['#eaf3de','#27500a']
+};
+
+EVENTS.forEach(e=>{
+  if(e.date){const d=new Date(e.date+'T00:00:00');e._day=d.getDate();e._mon=d.getMonth();e._sort=d.getTime();e._hasDate=true;}
+  else if(e.date_text){const i=MONTHFULL.findIndex(m=>m.toLowerCase()===e.date_text.toLowerCase());if(i>=0){e._mon=i;e._sort=new Date(2026,i,1).getTime();e._monthOnly=true;}else{e._mon=null;e._sort=Number.MAX_SAFE_INTEGER;}}
+  else{e._mon=null;e._sort=Number.MAX_SAFE_INTEGER;}
+});
+
+const state={q:'',type:'',etype:'',org:'',month:'',sort:'date'};
+const $=id=>document.getElementById(id);
+const tcls=t=>t==='Market Company'?'mc':'bc';
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function priceBlock(p){
+  if(!p) return '';
+  const hasSplit=p.member||p.nonmember||p.early;
+  if(hasSplit){
+    let rows='';
+    if(p.member) rows+='<div class="pr mem"><div class="pl">Member</div><div class="pv">'+esc(p.member)+'</div></div>';
+    if(p.nonmember) rows+='<div class="pr"><div class="pl">Non-member</div><div class="pv">'+esc(p.nonmember)+'</div></div>';
+    if(p.early) rows+='<div class="pr early"><div class="pl">Early bird</div><div class="pv">'+esc(p.early)+'</div></div>';
+    let note=p.note?'<div class="price-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>'+esc(p.note)+'</div>':'';
+    return '<div class="price"><div class="price-h"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pricing</div><div class="price-rows">'+rows+'</div>'+note+'</div>';
+  }
+  return '<div class="price single"><div class="pn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'+esc(p.note||'See event page')+'</div></div>';
+}
+
+function render(){
+  let list=EVENTS.filter(e=>{
+    if(state.type && e.type!==state.type) return false;
+    if(state.etype && e.event_type!==state.etype) return false;
+    if(state.org && e.org!==state.org) return false;
+    if(state.month!=='' && String(e._mon)!==state.month) return false;
+    if(state.q){const hay=(e.event+' '+(e.org||'')+' '+(e.location||'')+' '+(e.event_type||'')+' '+e.type).toLowerCase();if(!hay.includes(state.q.toLowerCase()))return false;}
+    return true;
+  });
+  const UND=Number.MAX_SAFE_INTEGER;
+  list.sort((a,b)=>{
+    if(state.sort==='org') return (a.org||'~').localeCompare(b.org||'~')||a._sort-b._sort;
+    const au=a._sort===UND, bu=b._sort===UND;
+    if(au||bu) return au-bu; // undated always last
+    if(state.sort==='date-desc') return b._sort-a._sort;
+    return a._sort-b._sort;
+  });
+
+  $('count').innerHTML = list.length===EVENTS.length?'Showing <b>all '+EVENTS.length+'</b> events':'Showing <b>'+list.length+'</b> of '+EVENTS.length+' events';
+
+  const grid=$('grid');
+  if(!list.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><h3>No events found</h3><p>Try clearing filters or searching a different term.</p></div>';return;}
+
+  grid.innerHTML=list.map(e=>{
+    const tc=tcls(e.type);
+    let datebox;
+    if(e._hasDate) datebox='<div class="datebox"><div class="d">'+e._day+'</div><div class="m">'+MONTHS[e._mon]+'</div></div>';
+    else if(e._monthOnly) datebox='<div class="datebox tbd"><div class="d">'+MONTHS[e._mon]+'</div></div>';
+    else datebox='<div class="datebox tbd"><div class="d">TBA</div></div>';
+    let etag='';
+    if(e.event_type){const c=ETYPE_COLORS[e.event_type]||['#f1efe8','#444441'];etag='<span class="etype" style="background:'+c[0]+';color:'+c[1]+'">'+esc(e.event_type)+'</span>';}
+    const link=e.url
+      ? '<a class="btn go" href="'+e.url+'" target="_blank" rel="noopener">More info <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>'
+      : '<span class="btn dis">Details to be announced</span>';
+    return '<article class="card '+tc+'">'+
+      '<div class="card-top">'+datebox+etag+'</div>'+
+      '<div class="org">'+esc(e.org||'—')+'</div>'+
+      '<div class="title">'+esc(e.event)+'</div>'+
+      '<div class="meta">'+
+        '<div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'+(e._hasDate?MONTHFULL[e._mon]+' '+e._day+', 2026':(e._monthOnly?MONTHFULL[e._mon]+' 2026':'Date to be announced'))+'</div>'+
+        '<div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.7-7-11a7 7 0 0114 0c0 5.3-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'+esc(e.location||'—')+'</div>'+
+      '</div>'+
+      priceBlock(e.price)+
+      '<div class="card-foot">'+link+'</div>'+
+    '</article>';
+  }).join('');
+}
+
+function init(){
+  const orgs=[...new Set(EVENTS.map(e=>e.org).filter(Boolean))].sort();
+  $('org').innerHTML='<option value="">All organizations</option>'+orgs.map(o=>'<option value="'+esc(o)+'">'+esc(o)+'</option>').join('');
+  const ets=[...new Set(EVENTS.map(e=>e.event_type).filter(Boolean))].sort();
+  $('etype').innerHTML='<option value="">All event types</option>'+ets.map(o=>'<option value="'+esc(o)+'">'+esc(o)+'</option>').join('');
+  const months=[...new Set(EVENTS.map(e=>e._mon).filter(m=>m!=null))].sort((a,b)=>a-b);
+  $('month').innerHTML='<option value="">All months</option>'+months.map(m=>'<option value="'+m+'">'+MONTHFULL[m]+'</option>').join('');
+  $('s-total').textContent=EVENTS.length;
+  $('s-bc').textContent=EVENTS.filter(e=>e.type==='Business Chamber').length;
+  $('s-mc').textContent=EVENTS.filter(e=>e.type==='Market Company').length;
+  $('s-org').textContent=orgs.length;
+}
+
+$('q').addEventListener('input',e=>{state.q=e.target.value;render();});
+$('etype').addEventListener('change',e=>{state.etype=e.target.value;render();});
+$('org').addEventListener('change',e=>{state.org=e.target.value;render();});
+$('month').addEventListener('change',e=>{state.month=e.target.value;render();});
+function syncDayToggle(){
+  const lbl=$('daytoggle-label');
+  if(state.sort==='date-desc') lbl.textContent='Day: latest first';
+  else lbl.textContent='Day: earliest first';
+}
+$('sort').addEventListener('change',e=>{state.sort=e.target.value;syncDayToggle();render();});
+$('daytoggle').addEventListener('click',()=>{
+  state.sort = state.sort==='date' ? 'date-desc' : 'date';
+  $('sort').value=state.sort;
+  syncDayToggle();render();
+});
+document.querySelectorAll('#typechips .chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('#typechips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');state.type=c.dataset.type;render();}));
+
+init();render();
+</script>
+</body>
+</html>
